@@ -1,0 +1,15 @@
+{
+  "name": "headless-2048",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./index.spec.js | tap-spec"
+  },
+  "author": "Lucian Buzzo <lucian.buzzo@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "tap-spec": "^5.0.0",
+    "tape": "^5.0.1"
+  }
+}
