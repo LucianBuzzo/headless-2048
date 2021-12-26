@@ -1,17 +1,16 @@
-const randBetween = (start, end) => Math.floor(Math.random() * end) + start
-
-const getNewTileValue = () => Math.random() < 0.9 ? 2 : 4;
-
 const GRID_WIDTH = 4
 const GRID_HEIGHT = 4
 const LENGTH = GRID_WIDTH * GRID_HEIGHT
+
+const K = (x) => x
+const randBetween = (start, end) => Math.floor(Math.random() * end) + start
 
 const addTile = (state) => {
   const openIndexes = state.reduce((carry, item, index) => item ? carry : carry.concat(index), [])
 
   const index = openIndexes[randBetween(0, openIndexes.length)]
 
-  state[index] = getNewTileValue()
+  state[index] = Math.random() < 0.9 ? 2 : 4;
 
   return state
 }
@@ -21,37 +20,25 @@ const processRow = (row) => {
   const nextIndex = remaining.findIndex(x => x)
 
   if (nextIndex === -1) {
-    // There is nothing else to do
     return row
   }
 
   const nextValue = remaining[nextIndex]
 
-  // Null the index of the found tile
   remaining[nextIndex] = null
 
-  // If the current value is null, swap the tile values and reprocess
   if (current === null) {
     current = nextValue
     return processRow([ current, ...remaining ])
+  }
 
-  // If the value is the same as the current value add them together
-  } else if (current === nextValue) {
+  if (current === nextValue) {
     current = current * 2
-
-  // If the value is not the same as the current value, move it to the
-  // adjacent tile
-  } else if (current !== nextValue) {
+  } else {
     remaining[0] = nextValue
   }
 
   return [ current, ...processRow(remaining) ]
-}
-
-const initialise = () => {
-  const state = new Array(LENGTH).fill(null, 0, LENGTH)
-
-  return addTile(addTile(state))
 }
 
 const chunkArray = (arr, chunkSize = 4) => {
@@ -90,32 +77,13 @@ const reverseProcessChunks = (arr) =>
 
 const run = (state, dir) => {
   if (!state) {
-    state = initialise()
-    return state
+    return addTile(addTile(new Array(LENGTH).fill(null, 0, LENGTH)))
   }
 
-  if (dir === 'left') {
-    return addTile(processChunks(state))
-  }
+  const p = ['left', 'up'].includes(dir) ? processChunks : reverseProcessChunks
+  const r = ['left', 'right'].includes(dir) ? K : rotate
 
-  if (dir === 'right') {
-    return addTile(reverseProcessChunks(state))
-  }
-
-  if (dir === 'up') {
-    const clone = rotate(state.slice(), 3)
-    const result = rotate(processChunks(clone))
-    return addTile(result)
-  }
-
-  if (dir === 'down') {
-    const clone = rotate(state.slice(), 3)
-    const result = rotate(reverseProcessChunks(clone))
-    return addTile(result)
-
-  }
-
-  return state
+  return addTile(r(p(r(state.slice(), 3))))
 }
 
 module.exports = {

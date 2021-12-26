@@ -146,6 +146,21 @@ test('processRow(): should merge two values together', (t) => {
   }
 })
 
+test('processRow(): should not merge cells mor than once', (t) => {
+  const suite = [
+    {
+      start: [ 2, 2, 4, null ],
+      expected: [ 4, 4, null, null ],
+    },
+  ]
+  t.plan(suite.length)
+
+  for (const item of suite) {
+    const result = game.processRow(item.start)
+    t.deepEqual(result, item.expected)
+  }
+})
+
 test('processRow(): should move a value to the beginning of the array', (t) => {
   const suite = [
     {
