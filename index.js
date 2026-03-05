@@ -8,9 +8,13 @@ const randBetween = (start, end) => Math.floor(Math.random() * end) + start
 const addTile = (state) => {
   const openIndexes = state.reduce((carry, item, index) => item ? carry : carry.concat(index), [])
 
+  if (openIndexes.length === 0) {
+    return state
+  }
+
   const index = openIndexes[randBetween(0, openIndexes.length)]
 
-  state[index] = Math.random() < 0.9 ? 2 : 4;
+  state[index] = Math.random() < 0.9 ? 2 : 4
 
   return state
 }

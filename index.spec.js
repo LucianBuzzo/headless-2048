@@ -266,3 +266,19 @@ test('should merge multiple values together on swipe down', (t) => {
   t.equal(result[12], 4)
   t.equal(result[14], 4)
 })
+
+
+test('run(): should not mutate shape when board is full', (t) => {
+  t.plan(2)
+  const start = [
+    2, 4, 2, 4,
+    4, 2, 4, 2,
+    2, 4, 2, 4,
+    4, 2, 4, 2,
+  ]
+
+  const result = game.run(start, 'left')
+
+  t.equal(result.length, 16)
+  t.equal(Object.keys(result).includes('undefined'), false)
+})
