@@ -79,6 +79,9 @@ const reverseProcessChunks = (arr) =>
     )
 
 
+const hasStateChanged = (before, after) =>
+  before.some((item, index) => item !== after[index])
+
 const run = (state, dir) => {
   if (!state) {
     return addTile(addTile(new Array(LENGTH).fill(null, 0, LENGTH)))
@@ -86,8 +89,11 @@ const run = (state, dir) => {
 
   const p = ['left', 'up'].includes(dir) ? processChunks : reverseProcessChunks
   const r = ['left', 'right'].includes(dir) ? K : rotate
+  const nextState = r(p(r(state.slice(), 3)))
 
-  return addTile(r(p(r(state.slice(), 3))))
+  return hasStateChanged(state, nextState)
+    ? addTile(nextState)
+    : nextState
 }
 
 module.exports = {

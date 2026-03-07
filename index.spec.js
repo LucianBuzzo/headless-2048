@@ -282,3 +282,17 @@ test('run(): should not mutate shape when board is full', (t) => {
   t.equal(result.length, 16)
   t.equal(Object.keys(result).includes('undefined'), false)
 })
+
+test('run(): should not add a random tile when swipe does not change board state', (t) => {
+  t.plan(1)
+  const start = [
+    2, null, null, null,
+    null, null, null, null,
+    null, null, null, null,
+    null, null, null, null,
+  ]
+
+  const result = game.run(start, 'left')
+
+  t.deepEqual(result, start)
+})
